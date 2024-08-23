@@ -33,16 +33,16 @@ const Landing: React.FC = () => {
         <div className="mt-12 flex justify-center space-x-6">
         <button
             className="bg-yellow-400 text-blue-800 font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-yellow-300 transition duration-300"
-            onClick={() => navigate('/signup')}
+            onClick={() => navigate('/home')}
           >
-            Sign Up
+            Scan your Adhar
           </button>
-          <button
+          {/* <button
             className="bg-white text-blue-800 font-semibold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
             onClick={() => navigate('/login')}
           >
             Login
-          </button>
+          </button> */}
         </div>
       </div>
 

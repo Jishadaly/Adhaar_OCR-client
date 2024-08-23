@@ -1,49 +1,21 @@
+import { createSlice } from '@reduxjs/toolkit';
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface userData{
-  user:any,
-  token:any
-
-}
-
-interface AuthState{
-  user:userData |null,
-  token:string | null
-  userPost:any[],
-}
-
-const userInitialState:AuthState={
-  user:null,
-  token:null,
-  userPost:[]
-  
-}
-
-
-const authSlice=createSlice({
-  name:'auth',
-  initialState:userInitialState,
-  reducers:{
-    logged:(state,action:PayloadAction<{user:userData}>)=>{
-      console.log(action.payload.user);
-      state.user=action.payload.user.user;
-      state.token=action.payload.user.token
-      
+export const authSlice = createSlice({
+  name: 'auth',
+  initialState: {
+    uploadedImage: null,
+    aadhaarDetails: null,
+  },
+  reducers: {
+    setUploadedImage: (state, action) => {
+      state.uploadedImage = action.payload;
     },
-    logout: (state:any) => {
-      state.user = null;
-      state.token = null;
-      state.userPost=[]
+    setAadhaarDetails: (state, action) => {
+      state.aadhaarDetails = action.payload;
     },
+  },
+});
 
+export const { setUploadedImage, setAadhaarDetails } = authSlice.actions;
 
- 
-    
-  }
-})
-
-
-
-export const { logged,logout} = authSlice.actions;
 export default authSlice.reducer;

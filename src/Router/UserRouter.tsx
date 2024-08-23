@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Landing from '../Page/Landing';
-import SignUp from '../Page/Signup';
-import SignIn from '../Page/Login';
+import Home from '../Page/Home';
+
 
 const appRouter = createBrowserRouter([
   {
@@ -9,13 +9,11 @@ const appRouter = createBrowserRouter([
     element: <Landing />
   },
   {
-    path:'/signup',
-    element:<SignUp/>
+    path:'/home',
+    element:<Home/>
+   
   },
-  {
-    path:'/login',
-    element:<SignIn/>
-  }
+
 ]);
 
 export default appRouter;
