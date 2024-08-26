@@ -3,10 +3,18 @@ import { useDispatch } from 'react-redux';
 import { setAadhaarDetails, setUploadedImage } from '../utils/context/Reducers/authSlice';
 import Tesseract from 'tesseract.js';
 
+interface AadhaarData {
+  name: string;
+  aadhaarNumber: string;
+  dob: string;
+  gender: string;
+  address: string;
+}
+
 const Home: React.FC = () => {
   const [frontImage, setFrontImage] = useState<string | null>(null);
   const [backImage, setBackImage] = useState<string | null>(null);
-  const [aadhaarData, setAadhaarData] = useState<any>(null);
+  const [aadhaarData, setAadhaarData] = useState<AadhaarData | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,19 +25,17 @@ const Home: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        const image = reader.result as string;
         if (side === 'front') {
-          setFrontImage(reader.result as string);
-          dispatch(setUploadedImage(reader.result as string));
+          setFrontImage(image);
         } else {
-          setBackImage(reader.result as string);
-          dispatch(setUploadedImage(reader.result as string));
+          setBackImage(image);
         }
+        dispatch(setUploadedImage(image));
       };
       reader.readAsDataURL(file);
     }
   };
-  console.log('888shfhudfudfjdnfjdfnd' + JSON.stringify(aadhaarData, null, 2));
-
 
   const handleOcrProcess = () => {
     setLoading(true);
@@ -40,9 +46,9 @@ const Home: React.FC = () => {
         image as string,
         'eng',
         {
-          logger: (m) => console.log(m),
+          logger: (m:any) => console.log(m),
         }
-      ).then((result) => ({
+      ).then((result: Tesseract.RecognizeResult) => ({
         side: index === 0 ? 'front' : 'back',
         text: result.data.text,
       }))
@@ -50,13 +56,9 @@ const Home: React.FC = () => {
 
     Promise.all(ocrPromises)
       .then((results) => {
-        const frontText = results.find(r => r.side === 'front')?.text || '';
-        const backText = results.find(r => r.side === 'back')?.text || '';
+        const frontText = results.find((r: { side: string; text: string }) => r.side === 'front')?.text || '';
+        const backText = results.find((r: { side: string; text: string }) => r.side === 'back')?.text || '';
         const combinedText = frontText + ' ' + backText;
-
-        console.log('Front Text:', frontText);
-        console.log('Back Text:', backText);
-        console.log('Combined Text:', combinedText);
 
         const aadhaarNumberPattern = /\b\d{4}\s?\d{4}\s?\d{4}\b/;
         const namePattern = /^([A-Z][a-z]+(?:\s[A-Z][a-z]+)*)/m;
@@ -64,7 +66,7 @@ const Home: React.FC = () => {
         const genderPattern = /\b(Male|Female)\b/i;
         const addressPattern = /Address:?\s*(S\/O.*?)(?:\d{6}|$)/is;
 
-        const extractedData = {
+        const extractedData: AadhaarData = {
           name: 'Not found',
           aadhaarNumber: combinedText.match(aadhaarNumberPattern)?.[0]?.replace(/\s/g, ' ') || 'Not found',
           dob: 'Not found',
@@ -99,8 +101,6 @@ const Home: React.FC = () => {
             .replace(/\s+/g, ' ')
             .trim();
         }
-
-        console.log('Extracted Data:', extractedData);
 
         setAadhaarData(extractedData);
         dispatch(setAadhaarDetails(extractedData));
