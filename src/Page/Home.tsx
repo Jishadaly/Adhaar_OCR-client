@@ -28,6 +28,8 @@ const Home: React.FC = () => {
       reader.readAsDataURL(file);
     }
   };
+  console.log('888shfhudfudfjdnfjdfnd' + JSON.stringify(aadhaarData, null, 2));
+
 
   const handleOcrProcess = () => {
     setLoading(true);
@@ -202,10 +204,13 @@ const Home: React.FC = () => {
         <div className="mt-8 bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
           <h2 className="text-2xl font-bold mb-4">Extracted Aadhaar Information:</h2>
           {Object.entries(aadhaarData).map(([key, value]) => (
-            <p key={key}><strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}</p>
+            <p key={key}>
+              <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value as string}
+            </p>
           ))}
         </div>
       )}
+
     </div>
   );
 };
